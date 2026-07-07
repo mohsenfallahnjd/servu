@@ -1,36 +1,77 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# ServiceTime
 
-## Getting Started
+A minimal web app to track periodic maintenance for your **cars** and **motorcycles** — log service dates, mileage, and what was done.
 
-First, run the development server:
+## Features
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+- User registration and sign-in
+- Add cars and motorcycles with odometer tracking
+- Log services with predefined options (oil change, filters, brakes, chain lube, etc.)
+- Full service history per vehicle
+- Dark mode support
+- Ready to deploy on [Vercel](https://vercel.com)
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Stack
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+- **Next.js 16** (App Router)
+- **PostgreSQL** + **Prisma**
+- **NextAuth.js** (credentials)
+- **Tailwind CSS**
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Local setup
 
-## Learn More
+1. **Clone and install**
 
-To learn more about Next.js, take a look at the following resources:
+   ```bash
+   bun install
+   ```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+2. **Configure environment**
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+   Copy `.env.example` to `.env` and fill in values:
 
-## Deploy on Vercel
+   ```bash
+   cp .env.example .env
+   ```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+   - `DATABASE_URL` — PostgreSQL connection string ([Neon](https://neon.tech) free tier works well)
+   - `AUTH_SECRET` — run `openssl rand -base64 32`
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+3. **Push database schema**
+
+   ```bash
+   bun run db:push
+   ```
+
+4. **Start dev server**
+
+   ```bash
+   bun run dev
+   ```
+
+   Open [http://localhost:3000](http://localhost:3000)
+
+## Deploy to Vercel
+
+1. Push this repo to GitHub/GitLab
+2. Import the project in [Vercel](https://vercel.com/new)
+3. Add environment variables:
+   - `DATABASE_URL` — from Neon or Vercel Postgres
+   - `AUTH_SECRET` — same as local
+4. Deploy — `postinstall` runs `prisma generate` automatically
+5. After first deploy, run migrations against production:
+
+   ```bash
+   bunx prisma db push
+   ```
+
+   Or connect Vercel Postgres and run `prisma migrate deploy` if using migrations.
+
+## Scripts
+
+| Command | Description |
+|---------|-------------|
+| `bun run dev` | Start development server |
+| `bun run build` | Production build |
+| `bun run db:push` | Sync schema to database |
+| `bun run db:studio` | Open Prisma Studio |
