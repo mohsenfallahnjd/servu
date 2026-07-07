@@ -99,6 +99,10 @@ export const fa: Dictionary = {
     logServiceSubtitle: "ثبت کارهای انجام‌شده و زمان",
     costLabel: (amount: number) =>
       `هزینه: ${amount.toLocaleString("fa-IR")} تومان`,
+    confirmDelete: (name: string) =>
+      `${name} حذف شود؟ تمام تاریخچه سرویس آن نیز حذف می‌شود.`,
+    entries: (count: number) =>
+      count === 1 ? "۱ سرویس" : `${count.toLocaleString("fa-IR")} سرویس`,
   },
   service: {
     date: "تاریخ سرویس",
@@ -110,6 +114,9 @@ export const fa: Dictionary = {
     selectAtLeastOne: "حداقل یک سرویس انتخاب کنید",
     invalidInput: "ورودی نامعتبر",
     notFound: "خودرو پیدا نشد",
+    statusReplace: "تعویض",
+    statusInspect: "بازدید",
+    confirmDelete: "این رکورد سرویس حذف شود؟",
   },
   validation: {
     nameMin: "نام باید حداقل ۲ کاراکتر باشد",
@@ -128,7 +135,8 @@ export const fa: Dictionary = {
     oil_change: "تعویض روغن",
     oil_filter: "فیلتر روغن",
     air_filter: "فیلتر هوا",
-    cabin_filter: "فیلتر کابین",
+    cabin_filter: "فیلتر اتاق",
+    fuel_filter: "فیلتر بنزین",
     brake_pads: "لنت ترمز",
     brake_fluid: "روغن ترمز",
     tire_rotation: "چرخش لاستیک",
@@ -137,6 +145,12 @@ export const fa: Dictionary = {
     spark_plugs: "شمع",
     battery: "باتری",
     transmission_fluid: "روغن گیربکس",
+    power_steering_fluid: "روغن فرمان",
+    clutch_service: "سرویس کلاچ",
+    bolt_tightening: "آچارکشی",
+    engine_belt: "تسمه موتور",
+    timing_belt: "تسمه تایم",
+    alternator_belt: "تسمه دینام",
     general_inspection: "بازدید کلی",
     chain_lube: "روغن زنجیر",
     chain_adjustment: "تنظیم زنجیر",

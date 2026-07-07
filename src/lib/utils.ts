@@ -1,5 +1,6 @@
 import type { Dictionary } from "@/lib/i18n/dictionaries/en";
-import { normalizeServiceKey } from "@/lib/constants";
+import { normalizeServiceKey, parseServiceEntry } from "@/lib/constants";
+import { formatJalaliDate } from "@/lib/jalali";
 import type { Locale } from "@/lib/i18n/config";
 
 export function cn(...classes: (string | boolean | undefined)[]) {
@@ -7,12 +8,14 @@ export function cn(...classes: (string | boolean | undefined)[]) {
 }
 
 export function formatDate(date: Date | string, locale: Locale = "fa") {
-  const tag = locale === "fa" ? "fa-IR" : "en-US";
-  return new Intl.DateTimeFormat(tag, {
+  if (locale === "fa") {
+    return formatJalaliDate(date, "long");
+  }
+
+  return new Intl.DateTimeFormat("en-US", {
     year: "numeric",
     month: "short",
     day: "numeric",
-    calendar: locale === "fa" ? "persian" : "gregory",
   }).format(new Date(date));
 }
 
@@ -29,9 +32,24 @@ export function getServiceLabel(
   value: string,
   dict: Dictionary,
 ): string {
-  const key = normalizeServiceKey(value);
+  const { key } = parseServiceEntry(value);
+  const normalized = normalizeServiceKey(key);
   const services = dict.services as Record<string, string>;
-  return services[key] ?? value;
+  return services[normalized] ?? services[key] ?? key;
+}
+
+export function formatServiceEntry(value: string, dict: Dictionary): string {
+  const { key, status } = parseServiceEntry(value);
+  const normalized = normalizeServiceKey(key);
+  const label = getServiceLabel(normalized, dict);
+  if (!status) return label;
+
+  const statusLabel =
+    status === "replace"
+      ? dict.service.statusReplace
+      : dict.service.statusInspect;
+
+  return `${label} · ${statusLabel}`;
 }
 
 export function formatCost(amount: number, locale: Locale): string {

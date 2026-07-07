@@ -7,7 +7,7 @@ import { Card, CardDescription, CardTitle } from "@/components/ui/card";
 import { getDictionary } from "@/lib/i18n";
 import { getLocale } from "@/lib/i18n/get-locale";
 import { prisma } from "@/lib/db";
-import { formatDate, formatOdometer, getServiceLabel } from "@/lib/utils";
+import { formatDate, formatOdometer, formatServiceEntry } from "@/lib/utils";
 
 export default async function DashboardPage() {
   const session = await auth();
@@ -103,7 +103,7 @@ export default async function DashboardPage() {
                       {formatDate(lastService.date, locale)} —{" "}
                       {lastService.serviceTypes
                         .slice(0, 2)
-                        .map((s) => getServiceLabel(s, dict))
+                        .map((s) => formatServiceEntry(s, dict))
                         .join("، ")}
                       {lastService.serviceTypes.length > 2 ? "..." : ""}
                     </p>

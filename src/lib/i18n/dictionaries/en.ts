@@ -95,6 +95,9 @@ export const en = {
     logServiceTitle: "Log service",
     logServiceSubtitle: "Record what was done and when",
     costLabel: (amount: number) => `Cost: $${amount.toFixed(2)}`,
+    confirmDelete: (name: string) =>
+      `Delete ${name}? This also removes all its service history.`,
+    entries: (count: number) => (count === 1 ? "1 entry" : `${count} entries`),
   },
   service: {
     date: "Service date",
@@ -106,6 +109,9 @@ export const en = {
     selectAtLeastOne: "Select at least one service",
     invalidInput: "Invalid input",
     notFound: "Vehicle not found",
+    statusReplace: "Replace",
+    statusInspect: "Inspect",
+    confirmDelete: "Remove this service record?",
   },
   validation: {
     nameMin: "Name must be at least 2 characters",
@@ -133,6 +139,13 @@ export const en = {
     spark_plugs: "Spark plugs",
     battery: "Battery",
     transmission_fluid: "Transmission fluid",
+    power_steering_fluid: "Power steering fluid",
+    fuel_filter: "Fuel filter",
+    clutch_service: "Clutch service",
+    bolt_tightening: "Bolt tightening",
+    engine_belt: "Engine belt",
+    timing_belt: "Timing belt",
+    alternator_belt: "Alternator belt",
     general_inspection: "General inspection",
     chain_lube: "Chain lube",
     chain_adjustment: "Chain adjustment",
@@ -195,6 +208,8 @@ export type Dictionary = {
     logServiceTitle: string;
     logServiceSubtitle: string;
     costLabel: (amount: number) => string;
+    confirmDelete: (name: string) => string;
+    entries: (count: number) => string;
   };
   service: Record<string, string>;
   validation: Record<string, string>;

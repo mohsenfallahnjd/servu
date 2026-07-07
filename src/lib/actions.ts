@@ -6,6 +6,7 @@ import { auth } from "@/auth";
 import { prisma } from "@/lib/db";
 import { getDictionary } from "@/lib/i18n";
 import { getLocale } from "@/lib/i18n/get-locale";
+import { parseGregorianIsoLocal } from "@/lib/jalali";
 import { serviceSchema, vehicleSchema } from "@/lib/validations";
 
 async function getMessages() {
@@ -108,7 +109,7 @@ export async function createService(vehicleId: string, formData: FormData) {
   await prisma.serviceRecord.create({
     data: {
       vehicleId,
-      date: new Date(date),
+      date: parseGregorianIsoLocal(date),
       odometer: odometer ?? null,
       serviceTypes,
       notes: notes || null,

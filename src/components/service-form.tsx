@@ -2,11 +2,16 @@
 
 import { useState } from "react";
 import { useLocale } from "@/components/locale-provider";
-import { SERVICE_KEYS } from "@/lib/constants";
+import { DateInput } from "@/components/date-input";
+import {
+  SERVICE_KEYS,
+  encodeServiceEntry,
+  type ServiceStatus,
+} from "@/lib/constants";
 import { Button } from "@/components/ui/button";
 import { Input, Textarea } from "@/components/ui/input";
 import { createService } from "@/lib/actions";
-import { getServiceLabel } from "@/lib/utils";
+import { cn, getServiceLabel } from "@/lib/utils";
 
 type ServiceFormProps = {
   vehicleId: string;
@@ -14,31 +19,37 @@ type ServiceFormProps = {
   defaultOdometer: number;
 };
 
+type SelectedServices = Record<string, ServiceStatus>;
+
 export function ServiceForm({
   vehicleId,
   vehicleType,
   defaultOdometer,
 }: ServiceFormProps) {
   const { dict } = useLocale();
-  const [selected, setSelected] = useState<string[]>([]);
+  const [selected, setSelected] = useState<SelectedServices>({});
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
   const options = SERVICE_KEYS[vehicleType];
-  const today = new Date().toISOString().split("T")[0];
 
-  function toggleService(type: string) {
-    setSelected((prev) =>
-      prev.includes(type) ? prev.filter((t) => t !== type) : [...prev, type],
-    );
+  function handleStatusClick(key: string, status: ServiceStatus) {
+    setSelected((prev) => {
+      if (prev[key] === status) {
+        const next = { ...prev };
+        delete next[key];
+        return next;
+      }
+      return { ...prev, [key]: status };
+    });
   }
 
   async function handleSubmit(formData: FormData) {
     setError("");
     setLoading(true);
 
-    for (const type of selected) {
-      formData.append("serviceTypes", type);
+    for (const [key, status] of Object.entries(selected)) {
+      formData.append("serviceTypes", encodeServiceEntry(key, status));
     }
 
     const result = await createService(vehicleId, formData);
@@ -48,6 +59,8 @@ export function ServiceForm({
     }
   }
 
+  const selectedCount = Object.keys(selected).length;
+
   return (
     <form action={handleSubmit} className="space-y-5">
       {error && (
@@ -56,13 +69,7 @@ export function ServiceForm({
         </div>
       )}
 
-      <Input
-        label={dict.service.date}
-        name="date"
-        type="date"
-        defaultValue={today}
-        required
-      />
+      <DateInput label={dict.service.date} required />
 
       <Input
         label={dict.service.odometer}
@@ -77,26 +84,51 @@ export function ServiceForm({
         <p className="text-sm font-medium text-zinc-700 dark:text-zinc-300">
           {dict.service.performed}
         </p>
-        <div className="flex flex-wrap gap-2">
+        <div className="space-y-2">
           {options.map((option) => {
-            const isSelected = selected.includes(option);
+            const currentStatus = selected[option];
             return (
-              <button
+              <div
                 key={option}
-                type="button"
-                onClick={() => toggleService(option)}
-                className={`rounded-full border px-3 py-1.5 text-sm transition-colors ${
-                  isSelected
-                    ? "border-zinc-900 bg-zinc-900 text-white dark:border-zinc-100 dark:bg-zinc-100 dark:text-zinc-900"
-                    : "border-zinc-200 bg-white text-zinc-700 hover:border-zinc-300 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-300 dark:hover:border-zinc-600"
-                }`}
+                className={cn(
+                  "flex flex-col gap-2 rounded-lg border px-3 py-2.5 transition-colors sm:flex-row sm:items-center sm:justify-between",
+                  currentStatus
+                    ? "border-zinc-300 bg-zinc-50 dark:border-zinc-600 dark:bg-zinc-900"
+                    : "border-zinc-200 bg-white dark:border-zinc-800 dark:bg-zinc-950",
+                )}
               >
-                {getServiceLabel(option, dict)}
-              </button>
+                <span className="text-sm font-medium text-zinc-800 dark:text-zinc-200">
+                  {getServiceLabel(option, dict)}
+                </span>
+                <div className="flex gap-2">
+                  {(["replace", "inspect"] as const).map((status) => {
+                    const isActive = currentStatus === status;
+                    const label =
+                      status === "replace"
+                        ? dict.service.statusReplace
+                        : dict.service.statusInspect;
+                    return (
+                      <button
+                        key={status}
+                        type="button"
+                        onClick={() => handleStatusClick(option, status)}
+                        className={cn(
+                          "rounded-full border px-3 py-1 text-xs font-medium transition-colors",
+                          isActive
+                            ? "border-zinc-900 bg-zinc-900 text-white dark:border-zinc-100 dark:bg-zinc-100 dark:text-zinc-900"
+                            : "border-zinc-200 bg-white text-zinc-600 hover:border-zinc-300 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-400 dark:hover:border-zinc-600",
+                        )}
+                      >
+                        {label}
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
             );
           })}
         </div>
-        {selected.length === 0 && (
+        {selectedCount === 0 && (
           <p className="text-xs text-zinc-400">{dict.service.selectOne}</p>
         )}
       </div>
@@ -119,7 +151,7 @@ export function ServiceForm({
       <Button
         type="submit"
         className="w-full"
-        disabled={loading || selected.length === 0}
+        disabled={loading || selectedCount === 0}
       >
         {loading ? dict.common.saving : dict.service.save}
       </Button>
