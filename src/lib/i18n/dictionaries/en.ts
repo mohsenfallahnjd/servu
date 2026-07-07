@@ -143,6 +143,62 @@ export const en = {
     install: "Install app",
     offline: "You are offline",
   },
-} as const;
+};
 
-export type Dictionary = typeof en;
+export type Dictionary = {
+  app: { name: string; tagline: string; description: string };
+  common: Record<string, string>;
+  auth: Record<string, string>;
+  home: {
+    badge: string;
+    title: string;
+    subtitle: string;
+    getStarted: string;
+    features: {
+      track: { title: string; desc: string };
+      vehicles: { title: string; desc: string };
+      history: { title: string; desc: string };
+    };
+  };
+  dashboard: {
+    title: string;
+    emptyHint: string;
+    vehicleCount: (count: number) => string;
+    addVehicle: string;
+    noVehicles: string;
+    addFirst: string;
+    lastService: string;
+    serviceCount: (count: number) => string;
+  };
+  vehicle: {
+    addTitle: string;
+    backToDashboard: string;
+    type: string;
+    car: string;
+    motorcycle: string;
+    displayName: string;
+    displayNamePlaceholder: string;
+    make: string;
+    model: string;
+    year: string;
+    currentOdometer: string;
+    odometerUnit: string;
+    km: string;
+    mi: string;
+    adding: string;
+    add: string;
+    logService: string;
+    serviceHistory: string;
+    noServices: string;
+    logFirst: string;
+    backToVehicle: (name: string) => string;
+    logServiceTitle: string;
+    logServiceSubtitle: string;
+    costLabel: (amount: number) => string;
+  };
+  service: Record<string, string>;
+  validation: Record<string, string>;
+  notFound: Record<string, string>;
+  services: Record<string, string>;
+  pwa: Record<string, string>;
+};

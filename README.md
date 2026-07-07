@@ -1,6 +1,6 @@
-# ServiceTime
+# Servu — سروو
 
-A minimal web app to track periodic maintenance for your **cars** and **motorcycles** — log service dates, mileage, and what was done.
+A minimal PWA to track periodic maintenance for your **cars** and **motorcycles**. Available in **Persian (فارسی)** and **English**.
 
 ## Features
 
@@ -8,6 +8,8 @@ A minimal web app to track periodic maintenance for your **cars** and **motorcyc
 - Add cars and motorcycles with odometer tracking
 - Log services with predefined options (oil change, filters, brakes, chain lube, etc.)
 - Full service history per vehicle
+- **Persian / English** with RTL support and Jalali dates
+- **PWA** — install on phone home screen, basic offline support
 - Dark mode support
 - Ready to deploy on [Vercel](https://vercel.com)
 
@@ -51,6 +53,14 @@ A minimal web app to track periodic maintenance for your **cars** and **motorcyc
 
    Open [http://localhost:3000](http://localhost:3000)
 
+## Language
+
+Default language is **Persian (fa)**. Switch between فارسی and English using the toggle in the header. Preference is saved in a cookie.
+
+## PWA
+
+On mobile, use **Add to Home Screen** to install Servu. The app registers a service worker for offline fallback pages.
+
 ## Deploy to Vercel
 
 1. Push this repo to GitHub/GitLab
@@ -64,8 +74,6 @@ A minimal web app to track periodic maintenance for your **cars** and **motorcyc
    ```bash
    bunx prisma db push
    ```
-
-   Or connect Vercel Postgres and run `prisma migrate deploy` if using migrations.
 
 ## Scripts
 
