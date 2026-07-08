@@ -61,13 +61,13 @@ export const fa: Dictionary = {
 		},
 	},
 	dashboard: {
-		title: "ماشین و موتورهای من",
+		title: "وسایل نقلیه من",
 		emptyHint: "اولین خودرو یا موتور را اضافه کنید",
 		vehicleCount: (count: number) =>
 			count === 1
 				? "۱ وسیله نقلیه"
 				: `${count.toLocaleString("fa-IR")} وسیله نقلیه`,
-		addVehicle: "افزودن وسیله نقلیه",
+		addVehicle: "افزودن",
 		noVehicles:
 			"هنوز وسیله نقلیه ای نیست. یک ماشین یا موتور اضافه کنید تا سرویس‌ها را ثبت کنید.",
 		addFirst: "اولین وسیله نقلیه را اضافه کنید",
